@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto2/srceens/contacts_list.dart';
+import 'package:projeto2/srceens/transactions_list.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -19,24 +20,49 @@ class Dashboard extends StatelessWidget {
             child: Image.asset('images/bytebank_logo.png'),
           ),
           Row(
-            children: const [
-              _FeatureItem('Transfer', Icons.monetization_on,),
-              _FeatureItem('Transaction Feed', Icons.description),
+            children: [
+              _FeatureItem(
+                'Transfer',
+                Icons.monetization_on,
+                onClick: () {
+                  _showContactsList(context);
+                },
+              ),
+              _FeatureItem(
+                'Transaction Feed',
+                Icons.description,
+                onClick: () => _showTransactionsList(context),
+              ),
             ],
           ),
         ],
       ),
     );
   }
+
+  void _showContactsList(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const ContactsList(),
+      ),
+    );
+  }
+
+  _showTransactionsList(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TransactionsList(),
+      ),
+    );
+  }
 }
 
 class _FeatureItem extends StatelessWidget {
-  const _FeatureItem({Key? key}) : super(key: key);
-
   final String name;
   final IconData icon;
-  
-  _FeatureItem(this.name, this.icon);
+  final Function onClick;
+
+  const _FeatureItem(this.name, this.icon, {required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +71,7 @@ class _FeatureItem extends StatelessWidget {
       child: Material(
         color: Theme.of(context).primaryColor,
         child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const ContactsList(),
-              ),
-            );
-          },
+          onTap: () => onClick(),
           child: Container(
             padding: const EdgeInsets.all(8.0),
             height: 100,
@@ -59,7 +79,7 @@ class _FeatureItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
+              children: [
                 Icon(
                   icon,
                   color: Colors.white,
